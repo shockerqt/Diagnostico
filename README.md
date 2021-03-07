@@ -1,2 +1,1 @@
-# cc5901
-Práctica II
+# Formulario diagnóstico
