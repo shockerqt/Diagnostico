@@ -1,0 +1,85 @@
+{% from "_formhelpers.html" import render_main_clients_row, render_products, render_local_products, render_exterior_products %}
+
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<script src="{{ url_for('static', filename='js/section2.js') }}"></script>
+{% endblock %}
+
+{% block form %}
+<form class="needs-validation row g-4" method=post novalidate>
+	{{ form.csrf_token }}
+
+	<!-- Progress Bar -->
+	<div class="col-12">
+		<div class="progress" style="height: 6px;">
+			<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 20%;" aria-valuenow="2" aria-valuemin="0" aria-valuemax="10"></div>
+		</div>
+	</div>
+
+	<!-- Local Products -->
+	{{ render_local_products(
+		title="Indique los productos que comercializa la empresa en el país",
+		description=form.local_product_description,
+		quantity=form.local_product_quantity,
+		unit=form.local_product_unit,
+		hidden_field=form.local_products_entries
+	) }}
+
+	<div class="col-12 mt-4 mb-0"><hr></div>
+	
+	<!-- Exports? -->
+	<div class="col-12 my-2">
+		<div class="form-check">
+			{{ form.exports_check(class="form-check-input") }}
+			{{ form.exports_check.label(class="form-check-label") }}
+		</div>
+	</div>
+	
+	{{ render_exterior_products(
+		title="Indique los productos que comercializa la empresa en el extranjero",
+		country=form.exterior_product_country,
+		description=form.exterior_product_description,
+		quantity=form.exterior_product_quantity,
+		unit=form.exterior_product_unit,
+		hidden_field=form.exterior_products_entries
+	) }}
+
+	<div class="col-12 mt-0 mb-4"><hr></div>
+	
+	<!-- Main clients -->
+	<div class="col-12 mt-0">
+		<label for="mainClientsTable" class="form-label col-12">Principales clientes</label>
+	</div>
+	<div class="col-12 overflow-auto mt-1" id="mainClientsTable">
+		<div class="card text-center p-0 my-table" style="min-width: 600px;">
+			<div class="row row px-1 py-2 m-0 flex-nowrap">
+				<div class="col-4"></div>
+				<div class="col text-center h6 small m-0">Participación</div>
+				<div class="col text-center h6 small m-0">Intermediario</div>
+				<div class="col text-center h6 small m-0">Beneficiario final</div>
+			</div>
+			{{ render_main_clients_row(form.natural_people_participation, form.natural_people_category, 'Personas naturales') }}
+			{{ render_main_clients_row(form.micro_businesses_participation, form.micro_businesses_category, 'Microempresas') }}
+			{{ render_main_clients_row(form.small_businesses_participation, form.small_businesses_category, 'Pequeñas empresas') }}
+			{{ render_main_clients_row(form.medium_businesses_participation, form.medium_businesses_category, 'Medianas empresas') }}
+			{{ render_main_clients_row(form.big_businesses_participation, form.big_businesses_category, 'Grandes empresas') }}
+			{{ render_main_clients_row(form.state_agencies_participation, form.state_agencies_category, 'Organismos del Estado') }}
+		</div>
+		{% if form.participation_sum %}
+		<div class="invalid-feedback d-block px-3">
+			* Las participaciones deben sumar 100%.
+		</div>
+		{% endif %}
+	</div>
+	
+	<div class="col-12 my-4"><hr></div>
+	
+	{{ render_input_inline_money(form.sales_volume, cont_class="col-12 mt-0", currencies=currencies, span_id="sales_volume_span", currency_id="sales_volume_currency") }}
+	{{ form.sales_volume_currency }}
+	{{ render_input_inline(form.workers_number) }}
+	{{ render_input_inline(form.female_workers) }}
+
+	{{ render_buttons('blueprints.section1') }}
+</form>
+{% endblock %}

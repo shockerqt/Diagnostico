@@ -1,0 +1,494 @@
+{% macro render_input(field, container="col-12", cont_attr="") %}
+<div class="{{ container }}" {{ cont_attr }}>
+	{{ field.label(class="form-label") }}
+	{% if field.errors %}
+		{{ field(class="form-control is-invalid",**kwargs)|safe }}
+		{% for error in field.errors %}
+		<div class="invalid-feedback">
+			{{ error }}
+		</div>
+		{% endfor %}
+	{% else %}
+		{{ field(class="form-control",**kwargs)|safe }}
+	{% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_input_nolabel(field, container="col-12", cont_attr="", placeholder="") %}
+<div class="{{ container }} position-relative" {{ cont_attr }}>
+	{{ field.label(class="form-label visually-hidden") }}
+	{% if field.errors %}
+		{{ field(class="form-control is-invalid", placeholder=placeholder,**kwargs)|safe }}
+	{% else %}
+		{{ field(class="form-control", placeholder=placeholder,**kwargs)|safe }}
+	{% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_radio(field, container="col-12", cont_attr="", other_option_id=False, other_field=False) %}
+<fieldset class="{{ container }}" {{ cont_attr }}>
+	<div class="row">
+		<legend class="col-form-label col-12">{{ field.label.text }}</legend>
+		<div class="col-12">
+			{% for subfield in field %}
+			{% if subfield.id == other_option_id %}
+			<div class="form-check px-2">
+				<div class="row g-3 align-items-center">
+					<div class="form-check form-check-inline col-auto">
+						{% if field.errors %}
+						{{ subfield(class="form-check-input is-invalid") }}
+						{% else %}
+						{{ subfield(class="form-check-input") }}
+						{% endif %}
+						{{ subfield.label(class="form-check-label") }}
+					</div>
+					<div class="form-check col-auto">
+						{% if other_field.errors %}
+						{{ other_field(class="form-control is-invalid", placeholder=other_field.label.text, aria_label=other_field.label.text) }}
+						{% else %}
+						{{ other_field(class="form-control", placeholder=other_field.label.text, aria_label=other_field.label.text) }}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			{% else %}
+			<div class="form-check">
+				{% if field.errors %}
+				{{ subfield(class="form-check-input is-invalid") }}
+				{% else %}
+				{{ subfield(class="form-check-input") }}
+				{% endif %}
+				{{ subfield.label(class="form-check-label") }}
+			</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+</fieldset>
+{% endmacro %}
+
+{% macro render_checkbox(field, container="col-12") %}
+<div class="{{ container }}">
+	<div class="form-check">
+		{% if field.errors %}
+			{{ field(class="form-check-input is-invalid",**kwargs)|safe }}
+		{% else %}
+			{{ field(class="form-check-input",**kwargs)|safe }}
+		{% endif %}
+		{{ field.label(class="form-check-label") }}
+		{% if field.errors %}
+			{% for error in field.errors %}
+			<div class="invalid-feedback">
+				{{ error }}
+			</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+</div>
+{% endmacro %}
+
+{% macro render_select(field, container="col-12") %}
+<div class="{{ container }}">
+	{{ field.label(class="form-label") }}
+	{% if field.errors %}
+		{{ field(class="form-select is-invalid",**kwargs)|safe }}
+		{% for error in field.errors %}
+		<div class="invalid-feedback">
+			{{ error }}
+		</div>
+		{% endfor %}
+	{% else %}
+		{{ field(class="form-select",**kwargs)|safe }}
+	{% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_input_inline(field, cont_class="col-12", cont_attr="") %}
+<div class="{{ cont_class }}"  {{ cont_attr }}>
+	<div class="row">
+		{{ field.label(class="col-md-8 col-form-label") }}
+		<div class="col-md-4">
+			{% if field.errors %}
+			{{ field(class="form-control is-invalid",**kwargs)|safe }}
+			{% for error in field.errors %}
+			<div class="invalid-feedback">
+				{{ error }}
+			</div>
+			{% endfor %}
+			{% else %}
+			{{ field(class="form-control",**kwargs)|safe }}
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endmacro %}
+
+{% macro render_input_inline_money(field, cont_class="col-12", cont_attr="", currencies=['USD $'], span_id='', currency_id='') %}
+<div class="{{ cont_class }}"  {{ cont_attr }}>
+	<div class="row">
+		{{ field.label(class="col-md-8 col-form-label") }}
+		<div class="col-md-4">
+			<div class="input-group has-validation">
+				<button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+					<span class="visually-hidden">Seleccionar moneda</span>
+				</button>
+				<span id="{{ span_id }}" class="input-group-text"></span>
+				<ul class="dropdown-menu currency-dropdown">
+					{% for currency in currencies %}
+					<li><button type="button" class="dropdown-item" onclick="changeCurrency('{{ currency }}', '{{ span_id }}', '{{ currency_id }}');">{{ currency }}</button></li>
+					{% endfor %}
+				</ul>
+				{% if field.errors %}
+				{{ field(class="form-control is-invalid",**kwargs)|safe }}
+				{% for error in field.errors %}
+				<div class="invalid-feedback">
+					{{ error }}
+				</div>
+				{% endfor %}
+				{% else %}
+				{{ field(class="form-control",**kwargs)|safe }}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endmacro %}
+
+{% macro render_input_inline_unit(field, unit_field, units, cont_class="col-12", cont_attr="", span_id="", unit_id="") %}
+<div class="{{ cont_class }}"  {{ cont_attr }}>
+	<div class="row">
+		{{ field.label(class="col-sm-8 col-form-label") }}
+		<div class="col-md-4">
+			<div class="input-group has-validation flex-nowrap">
+				{% if field.errors %}
+				{{ field(class="form-control is-invalid", placeholder="Área", aria_describedby="production_area_validation") }}
+				{% else %}
+				{{ field(class="form-control", placeholder="Área") }}
+				{% endif %}
+				{% if unit_field.errors %}
+				{{ unit_field(class="form-control is-invalid", aria_label=unit_field.label.text, placeholder="Unidad") }}
+				{% else %}
+				{{ unit_field(class="form-control", aria_label=unit_field.label.text, placeholder="Unidad") }}
+				{% endif %}
+				<span id="{{ span_id }}" class="input-group-text">{{ units[0][0] }}</span>
+				<button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+					<span class="visually-hidden">Seleccionar unidad de medida</span>
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end">
+					{% for unit in units %}
+					<li><button type="button" class="dropdown-item" onclick="changeUnit(['{{ unit[0] }}', '{{ unit[1] }}'], '{{ span_id }}', '{{ unit_id }}')">{{ unit[1] }}</button></li>
+					{% endfor %}
+					<li><button type="button" class="dropdown-item" onclick="changeUnit('otro', '{{ span_id }}', '{{ unit_id }}')">otro</button></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endmacro %}
+
+{% macro render_input_inline_unit_nolabel(field, unit_field, units, cont_class="col-12", cont_attr="", span_id="", unit_id="") %}
+<div class="{{ cont_class }}"  {{ cont_attr }}>
+	{{ field.label(class="visually-hidden") }}
+	<div class="input-group has-validation flex-nowrap">
+		{% if field.errors %}
+		{{ field(class="form-control is-invalid", placeholder="Cantidad", aria_describedby="production_area_validation") }}
+		{% else %}
+		{{ field(class="form-control", placeholder="Cantidad") }}
+		{% endif %}
+		{% if unit_field.errors %}
+		{{ unit_field(class="form-control is-invalid", aria_label=unit_field.label.text, placeholder="Unidad") }}
+		{% else %}
+		{{ unit_field(class="form-control", aria_label=unit_field.label.text, placeholder="Unidad") }}
+		{% endif %}
+		<span id="{{ span_id }}" class="input-group-text">{{ units[0][0] }}</span>
+		<button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+			<span class="visually-hidden">Seleccionar unidad de medida</span>
+		</button>
+		<ul class="dropdown-menu dropdown-menu-end">
+			{% for unit in units %}
+			<li><button type="button" class="dropdown-item" onclick="changeUnit(['{{ unit[0] }}', '{{ unit[1] }}'], '{{ span_id }}', '{{ unit_id }}')">{{ unit[1] }}</button></li>
+			{% endfor %}
+			<li><button type="button" class="dropdown-item" onclick="changeUnit('otro', '{{ span_id }}', '{{ unit_id }}')">otro</button></li>
+		</ul>
+	</div>
+</div>
+{% endmacro %}
+
+{% macro render_select_inline(field) %}
+<div class="col-12">
+	<div class="row">
+		{{ field.label(class="col-md-8 col-form-label") }}
+		<div class="col-md-4">
+			{% if field.errors %}
+			{{ field(class="form-select is-invalid",**kwargs)|safe }}
+			{% for error in field.errors %}
+			<div class="invalid-feedback">
+				{{ error }}
+			</div>
+			{% endfor %}
+			{% else %}
+			{{ field(class="form-select",**kwargs)|safe }}
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endmacro %}
+
+{% macro render_buttons(section) %}
+<div class="col-12"><hr></div>
+<div class="col-12">
+	<div class="row g-4">
+		<div class="col-md-6">
+			<a id="secondSectionBackButton" class="w-100 btn btn-link btn-lg" href="{{ url_for(section) }}">Sección anterior</a>
+		</div>
+		
+		<div class="col-md-6">
+			<button id="secondSectionNextButton" class="w-100 btn btn-primary btn-lg" type="submit" >Siguiente sección</button>
+		</div>
+	</div>
+</div>
+{% endmacro %}
+
+{% macro render_main_clients_row(participation, category, row_title) %}
+<div class="row px-1 py-1 m-0 flex-nowrap align-items-center">
+	<div class="col-4 text-start h6 small m-0">{{ row_title }}</div>
+	<div class="col input-group">
+		{% if participation.errors %}
+		{{ participation(class="form-control is-invalid", aria_label=participation.label.text,**kwargs)|safe }}
+		{% else %}
+		{{ participation(class="form-control", aria_label=participation.label.text,**kwargs)|safe }}
+		{% endif %}
+		<span class="input-group-text">%</span>
+	</div>
+	{% for subfield in category %}
+	{% if category.errors %}
+	<label class="col" aria-label="{{ subfield.label.text }}">{{ subfield(class_="form-check-input is-invalid") }}</label>
+	{% else %}
+	<label class="col" aria-label="{{ subfield.label.text }}">{{ subfield(class_="form-check-input") }}</label>
+	{% endif %}
+	{% endfor %}
+</div>
+{% endmacro %}
+
+{% macro render_products(product_description, product_quantity, product_unit, product_type, exterior_product_country) %}
+	{% for i in range(7) %}
+	{% if i == 0 %}
+	<div class="col-12 mt-2 {{ product_type }}-product">
+	{% else %}
+	<div class="col-12 mt-2 {{ product_type }}-product" hidden>
+	{% endif %}
+		<div class="row g-1 mb-1">
+			{% if product_type == 'exterior' %}
+			<div class="col-md-4">
+			{% else %}
+			<div class="col-md-6">
+			{% endif %}
+				{% if product_description[i].errors %}
+				<div class="input-group has-validation">
+					<span class="input-group-text">#{{ i+1 }}</span>
+					{{ product_description[i](class="form-control is-invalid", placeholder=product_description[i].label.text, aria_label=product_description[i].label.text) }}
+					{% for error in product_description[i].errors %}
+					<div class="invalid-feedback">
+						{{ error }}
+					</div>
+					{% endfor %}
+				</div>
+				{% else %}
+				<div class="input-group">
+					<span class="input-group-text">#{{ i+1 }}</span>
+					{{ product_description[i](class="form-control", placeholder=product_description[i].label.text, aria_label=product_description[i].label.text) }}
+				</div>
+				{% endif %}
+			</div>
+			{% if product_type == 'exterior' %}
+			<div class="col-md-3">
+				{{ exterior_product_country[i](class="form-control is-invalid", placeholder=exterior_product_country[i].label.text, aria_label=exterior_product_country[i].label.text) }}
+			</div>
+			{% endif %}
+			<div class="col">
+				{{ render_input_inline_unit_nolabel(product_quantity[i], product_unit[i], [('m²','metros cuadrados'), ('ft²', 'pies cuadrados'), ('ha', 'hectáreas')], span_id='%s_product_unit_span-%d' % (product_type, i), unit_id=product_unit[i].id) }}
+			</div>
+			<div class="col-auto m-auto">
+				<button type="button" class="btn-close" aria-label="Eliminar campo" onclick="productsRemoveField('{{ product_type }}')" disabled></button>
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+{% endmacro %}
+
+{% macro render_table_row(desc, list, col="col-4", odd=False) %}
+{% if odd %}
+<div class="row align-items-center p-1 flex-nowrap mx-0 bg-light">
+{% else %}
+<div class="row align-items-center p-1 flex-nowrap mx-0">
+{% endif %}
+	<div class="{{ col }} text-start h6 small m-0">{{ desc }}</div>
+	{% for box in list %}
+	<label class="col" aria-label="{{ box.label.text }}">
+		{% if list.errors %}
+		{{ box(class_="form-check-input is-invalid") }}
+		{% else %}
+		{{ box(class_="form-check-input") }}
+		{% endif %}
+	</label>
+	{% endfor %}
+</div>
+{% endmacro %}
+
+{% macro render_toggle_check(field) %}
+<div class="col">
+	<label for="{{ field.id }}" class="border rounded-3 shadow-sm bg-white p-2">
+		{{ field(class="form-check-input me-1") }}
+		<strong class="small">{{ field.label.text }}</strong>
+	</label>
+</div>
+{% endmacro %}
+
+{% macro render_camera_toggles(field, field_n, field_vol) %}
+<div class="col">
+	<label for="{{ field.id }}" class="border rounded-3 shadow-sm bg-white py-2">
+		<div class="row row-cols-auto align-items-center m-0">
+			<div class="col">
+				{{ field(class="form-check-input me-1") }}
+				<strong class="small">{{ field.label.text }}</strong>
+			</div>
+			<div class="col">
+				{% if field_n.errors %}
+				{{ field_n(class="form-control is-invalid", placeholder="N°", size=2) }}
+				{% for error in field_n.errors %}
+				<div class="invalid-feedback">
+					{{ error }}
+				</div>
+				{% endfor %}
+				{% else %}
+				{{ field_n(class="form-control", placeholder="N°", size=2) }}
+				{% endif %}
+				{{ field_n.label(class="visually-hidden") }}
+			</div>
+			<div class="col">
+				{% if field_vol.errors %}
+				{{ field_vol(class="form-control is-invalid", placeholder="Vol.", size=2) }}
+				{% for error in field_vol.errors %}
+				<div class="invalid-feedback">
+					{{ error }}
+				</div>
+				{% endfor %}
+				{% else %}
+				{{ field_vol(class="form-control", placeholder="Vol.", size=2) }}
+				{% endif %}
+				{{ field_vol.label(class="visually-hidden") }}
+			</div>
+		</div>
+	</label>
+</div>
+{% endmacro %}
+
+
+<!-- SECTION 2 -->
+{% macro render_local_products(title, description, quantity, unit, hidden_field) %}
+<div class="col-12">
+	<label for="local_products_table" class="form-label">{{ title }}</label>
+</div>
+<div class="col-12 mt-0" id="local_products_table">
+	<div class="card p-0 my-table">
+		<div class="row align-items-center px-1 py-2 m-0 flex-nowrap">
+			<div class="col-auto h6 small text-center m-0">#</div>
+			<div class="col">
+				<div class="row g-1 py-1">
+					<div class="col-7 text-start h6 small m-0">
+						Descripción del producto
+						<div class="form-text">Nombre del producto, que resulta de agrupar la presentación y la condición.<br>
+							Por ejemplo: madera aserrada verde, agua mineral sin gas embotellada, pantalones de vestir unisex, queso de bola, chocolate en barra.</div>
+					</div>
+					<div class="col text-start h6 small m-0">
+						Unidad de volumen del producto
+						<div class="form-text">Para cada producto distinto, usar una fila aparte.<br>
+							Si por ejemplo produce agua en botellas de 0,5lt y en 1,0lt se trata de dos productos distintos.</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-auto px-4"></div>
+		</div>
+		{% for i in range(7) %}
+		<div class="row align-items-center p-1 flex-nowrap mx-0 local-product">
+			<div class="col-auto text-center h6 small m-0">{{ i + 1 }}</div>
+			<div class="col">
+				<div class="row g-1">
+					{{ render_input_nolabel(description[i], "col-md-7", placeholder="Descripción") }}
+					{{ render_input_inline_unit_nolabel(
+						field=quantity[i],
+						unit_field=unit[i],
+						units=[('unidades','unitario'), ('m³','metros cúbicos'), ('L', 'litros'), ('kg', 'kilogramos')],
+						cont_class='col',
+						span_id='local_product_unit_span-%d' % i,
+						unit_id=unit[i].id
+					) }}
+				</div>
+			</div>
+			<div class="col-auto"><button type="button" class="btn-close" aria-label="Close" onclick="productsRemoveField('local')"></button></div>
+		</div>
+		{% endfor %}
+	</div>
+	<div class="col-12 mt-2">
+		<i class="bi bi-plus-circle text-primary mx-4" id="local-products-add-button" role="button" aria-label="Agregar otro producto" onclick="productsAddField('local')"> Agregar otro producto</i>
+	</div>
+	{{ hidden_field }}
+</div>
+{% endmacro %}
+
+
+{% macro render_exterior_products(title, country, description, quantity, unit, hidden_field) %}
+<div class="col-12 m-0" id="exports_container">
+	<div class="row">
+		<div class="col-12">
+			<label for="exterior_products_table" class="form-label">{{ title }}</label>
+		</div>
+		<div class="col-12 mt-0" id="exterior_products_table">
+			<div class="card p-0 my-table">
+				<div class="row align-items-center px-1 py-2 m-0 flex-nowrap">
+
+					<div class="col-auto h6 small text-center m-0">#</div>
+					<div class="col">
+						<div class="row align-items-center g-0">
+							<div class="col-3 text-start h6 small m-0 d-none d-md-block">País</div>
+							<div class="col text-start h6 small m-0 d-none d-md-block">
+								Descripción del producto
+								<div class="form-text">Usar misma lógica anterior por favor.</div>
+							</div>
+							<div class="col-4 text-start h6 small m-0 d-none d-md-block">
+								Cantidad o volumen
+								<div class="form-text">Usar misma lógica anterior por favor.</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-auto px-4"></div>
+				</div>
+				{% for i in range(7) %}
+				<div class="row text-start align-items-center p-1 flex-nowrap mx-0 exterior-product">
+					<div class="col-auto text-center h6 small m-0">{{ i + 1 }}</div>
+					<div class="col">
+						<div class="row g-1">
+							{{ render_input_nolabel(country[i], "col-4 col-md-3", placeholder="País") }}
+							{{ render_input_nolabel(description[i], "col-8 col-md", placeholder="Descripción") }}
+							{{ render_input_inline_unit_nolabel(
+								field=quantity[i],
+								unit_field=unit[i],
+								units=[('unidades','unitario'), ('m³','metros cúbicos'), ('L', 'litros'), ('kg', 'kilogramos')],
+								cont_class='col-md-4',
+								span_id='exterior_product_unit_span-%d' % i,
+								unit_id=unit[i].id
+							) }}
+						</div>
+					</div>
+					<div class="col-auto"><button type="button" class="btn-close" aria-label="Close" onclick="productsRemoveField('exterior')"></button></div>
+				</div>
+				{% endfor %}
+			</div>
+			<div class="col-12 mt-2">
+				<i class="bi bi-plus-circle text-primary mx-4" id="exterior-products-add-button" role="button" aria-label="Agregar otro producto" onclick="productsAddField('exterior')"> Agregar otro producto</i>
+			</div>
+			{{ hidden_field }}
+		</div>
+	</div>
+</div>
+{% endmacro %}

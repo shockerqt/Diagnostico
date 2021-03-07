@@ -1,0 +1,101 @@
+{% from "_formhelpers.html" import render_input_inline_unit %}
+
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<script src="{{ url_for('static', filename='js/lib/Sortable.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/section5.js') }}"></script>
+{% endblock %}
+
+{% block form %}
+<form class="needs-validation row g-4" method=post novalidate>
+	{{ form.csrf_token }}
+
+	<!-- Progress Bar -->
+	<div class="col-12">
+		<div class="progress" style="height: 6px;">
+			<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 50%;" aria-valuenow="5" aria-valuemin="0" aria-valuemax="10"></div>
+		</div>
+	</div>
+
+	<div class="col-12">
+		<label class="form-label" for="energy_sources_list">Ordene las fuentes de energía que usa en su empresa</label><br>
+		<i class="small">Ordene los items arrastrándolos de mayor a menor prioridad</i>
+	</div>
+	<div class="col-12">
+		<div class="row g-2" id="energy_sources_list">
+			<div class="col-12 bg-body rounded border py-0 px-0 overflow-hidden">
+				<div class="row">
+					<div class="col-auto"><i class="bi bi-list handle py-1 px-4 bg-primary fw-bold fs-3 text-white"></i></div>
+					<div class="col align-self-center">Red eléctrica común</div>
+				</div>
+			</div>
+			<div class="col-12 bg-body rounded border py-0 px-0 overflow-hidden">
+				<div class="row">
+					<div class="col-auto"><i class="bi bi-list handle py-1 px-4 bg-primary fw-bold fs-3 text-white"></i></div>
+					<div class="col align-self-center">Generador a petróleo o gas</div>
+				</div>
+			</div>
+			<div class="col-12 bg-body rounded border py-0 px-0 overflow-hidden">
+				<div class="row">
+					<div class="col-auto"><i class="bi bi-list handle py-1 px-4 bg-primary fw-bold fs-3 text-white"></i></div>
+					<div class="col align-self-center">Paneles solares</div>
+				</div>
+			</div>
+			<div class="col-12 bg-body rounded border py-0 px-0 overflow-hidden">
+				<div class="row">
+					<div class="col-auto"><i class="bi bi-list handle py-1 px-4 bg-primary fw-bold fs-3 text-white"></i></div>
+					<div class="col align-self-center">Biomasa</div>
+				</div>
+			</div>
+			<div class="col-12 bg-body rounded border py-0 px-0 overflow-hidden">
+				<div class="row">
+					<div class="col-auto"><i class="bi bi-list handle py-1 px-4 bg-primary fw-bold fs-3 text-white"></i></div>
+					<div class="col align-self-center">Eólica</div>
+				</div>
+			</div>
+			<div class="col-12 bg-body rounded border py-0 px-0 overflow-hidden">
+				<div class="row">
+					<div class="col-auto"><i class="bi bi-list handle py-1 px-4 bg-primary fw-bold fs-3 text-white"></i></div>
+					<div class="col align-self-center">Otro</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{ form.energy_sources }}
+
+	{{ render_radio(form.energy_investments_financy) }}
+	{{ form.energy_costs_currency }}
+	{{ render_input_inline_money(form.energy_costs, cont_class="col-12", currencies=currencies, span_id="energy_costs_span", currency_id="energy_costs_currency") }}
+	{{ render_input_inline_unit(form.water_consumption, form.water_consumption_unit, [('m³','metros cúbicos'), ('L', 'litros'), ('gal', 'galones')], span_id='water_consumption_span', unit_id='water_consumption_unit') }}
+	{{ form.water_costs_currency }}
+	{{ render_input_inline_money(form.water_costs, cont_class="col-12", currencies=currencies, span_id="water_costs_span", currency_id="water_costs_currency") }}
+
+	<!-- Waste Handling -->
+	<div class="col-12">
+		<label for="productCyclesTable" class="form-label mb-0">Indique qué tipos de residuos genera y qué hace con ellos</label>
+	</div>
+	<div class="col-12 overflow-auto mt-0" id="productCyclesTable">
+		<div class="card text-center py-2" style="min-width: 900px;">
+			<div class="row px-1 py-0 m-0 flex-nowrap">
+				<div class="col-3"></div>
+				<div class="col text-center h6 small">Nada</div>
+				<div class="col text-center h6 small">Nada, aunque tiene potencial</div>
+				<div class="col text-center h6 small">Se reutiliza en la misma empresa</div>
+				<div class="col text-center h6 small">Se vende a terceros</div>
+				<div class="col text-center h6 small">Se recicla por terceros</div>
+				<div class="col text-center h6 small">Se incinera</div>
+				<div class="col text-center h6 small">Se usa para compostaje o alimentación</div>
+			</div>
+			{{ render_table_row(form.waste_handling_1.label.text, form.waste_handling_1, 'col-3', odd=True) }}
+			{{ render_table_row(form.waste_handling_2.label.text, form.waste_handling_2, 'col-3') }}
+			{{ render_table_row(form.waste_handling_3.label.text, form.waste_handling_3, 'col-3', odd=True) }}
+			{{ render_table_row(form.waste_handling_4.label.text, form.waste_handling_4, 'col-3') }}
+			{{ render_table_row(form.waste_handling_5.label.text, form.waste_handling_5, 'col-3', odd=True) }}
+		</div>
+	</div>
+
+	{{ render_buttons('blueprints.section4') }}
+</form>
+{% endblock %}

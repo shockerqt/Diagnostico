@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+{% endblock %}
+
+{% block form %}
+<form class="needs-validation row g-4" method=post novalidate>
+	{{ form.csrf_token }}
+
+	<!-- Progress Bar -->
+	<div class="col-12">
+		<div class="progress" style="height: 6px;">
+			<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 60%;" aria-valuenow="6" aria-valuemin="0" aria-valuemax="10"></div>
+		</div>
+	</div>
+
+	<!-- Education -->
+	<div class="col-12">
+		<label for="education_table" class="form-label col-12 mb-0">Para los siguientes grupos de trabajadores, ¿qué tipo de educación es la más frecuente?</label>
+	</div>
+	<i class="small mt-0">Seleccione una opción por columna</i>
+	<div class="col-12 overflow-auto mt-1" id="education_table">
+		<div class="card text-center p-0 my-table" style="min-width: 600px;">
+			<div class="row row px-1 py-2 m-0 flex-nowrap">
+				<div class="col-4"></div>
+				<div class="col text-center h6 small m-0">Equipo operativo</div>
+				<div class="col text-center h6 small m-0">Equipo administrativo</div>
+				<div class="col text-center h6 small m-0">Equipo gerencial</div>
+			</div>
+			{% for (a, b, c) in zipped %}
+			<div class="row align-items-center p-1 flex-nowrap mx-0">
+				<div class="col-4 text-start h6 small m-0">{{ a.label.text }}</div>
+				<label class="col" for="{{ a.id }}" aria-label="{{ a.label.text }}">
+					{% if a.errors %}
+					{{ a(class_="form-check-input is-invalid") }}
+					{% else %}
+					{{ a(class_="form-check-input") }}
+					{% endif %}
+				</label>
+
+				<label class="col" for="{{ b.id }}" aria-label="{{ b.label.text }}">
+					{% if b.errors %}
+					{{ b(class_="form-check-input is-invalid") }}
+					{% else %}
+					{{ b(class_="form-check-input") }}
+					{% endif %}
+				</label>
+				
+				<label class="col" for="{{ c.id }}" aria-label="{{ c.label.text }}">
+					{% if c.errors %}
+					{{ c(class_="form-check-input is-invalid") }}
+					{% else %}
+					{{ c(class_="form-check-input") }}
+					{% endif %}
+				</label>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+
+
+	{{ render_radio(form.training_programs) }}
+
+	{{ render_buttons('blueprints.section5') }}
+</form>
+{% endblock %}

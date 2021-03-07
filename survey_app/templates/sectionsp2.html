@@ -1,0 +1,113 @@
+{% from "_formhelpers.html" import render_toggle_check, render_camera_toggles %}
+
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<script src="{{ url_for('static', filename='js/sectionsp2.js') }}"></script>
+{% endblock %}
+
+{% block form %}
+<form class="needs-validation row g-4" method=post novalidate>
+	{{ form.csrf_token }}
+
+	<!-- Progress Bar -->
+	<div class="col-12">
+		<div class="progress" style="height: 6px;">
+			<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 80%;" aria-valuenow="8" aria-valuemin="0" aria-valuemax="10"></div>
+		</div>
+	</div>
+
+
+	<div class="col-12">
+		<h4>Información de la producción</h4>
+
+	</div>
+
+	<div class="col-12">
+		<h4>Información de los procesos</h4>
+	</div>
+
+	<!-- Process A -->
+	<div class="col-12">
+		<label for="productCyclesTable" class="form-label col-12 mb-0">A. Cancha de acopio trozos</label>
+	</div>
+	<div class="col-12 mt-1 card p-3">
+		<legend class="col-form-label col-12 mt-0 mb-2 p-0">Marque los subprocesos correspondientes</legend>
+		<div class="row row-cols-auto g-3">
+			{{ render_toggle_check(form.a_control_volumen_entrada) }}
+			{{ render_toggle_check(form.a_escaner_sombra) }}
+			{{ render_toggle_check(form.a_segregacion_por_calidad) }}
+			{{ render_toggle_check(form.a_acopio_por_diametros) }}
+			{{ render_toggle_check(form.a_control_stock_diario) }}
+		</div>
+		<div class="row mt-4">
+			{{ render_input(form.a_maximo_dias_en_acopio, container="col-auto") }}
+		</div>
+	</div>
+
+	<!-- Process B -->
+	<div class="col-12">
+		<label for="productCyclesTable" class="form-label col-12 mb-0">B. Aserradero</label>
+	</div>
+	<div class="col-12 mt-1 card p-3">
+		<legend class="col-form-label col-12 mt-0 mb-2 p-0">Marque los subprocesos correspondientes</legend>
+		<div class="row row-cols-auto g-3">
+			{{ render_toggle_check(form.b_escaner_orientacion_trozo) }}
+			{{ render_toggle_check(form.b_reductores_de_contrafuertes) }}
+			{{ render_toggle_check(form.b_escaner_optimizacion_rend) }}
+			{{ render_toggle_check(form.b_posicionador_transversal) }}
+			{{ render_toggle_check(form.b_reductores_laterales) }}
+			{{ render_toggle_check(form.b_mp_huincha_doble) }}
+			{{ render_toggle_check(form.b_mp_huincha_cuadruple) }}
+			{{ render_toggle_check(form.b_mp_carro_huincha) }}
+			{{ render_toggle_check(form.b_mp_s_circulares) }}
+			{{ render_toggle_check(form.b_reductor_lampazo) }}
+			{{ render_toggle_check(form.b_huincha_partidora_vertical) }}
+			{{ render_toggle_check(form.b_huincha_partidora_horizontal) }}
+			{{ render_toggle_check(form.b_escaner_optimizacion_ct) }}
+			{{ render_toggle_check(form.b_canteadora) }}
+			{{ render_toggle_check(form.b_multiple) }}
+			{{ render_toggle_check(form.b_zona_clasificacion_manual) }}
+			{{ render_toggle_check(form.b_zona_clasificacion_ia) }}
+			{{ render_toggle_check(form.b_segregacion_l_sl_c) }}
+			{{ render_toggle_check(form.b_control_dimensiona_y_grado) }}
+			{{ render_toggle_check(form.b_dimensionado_de_largo) }}
+			{{ render_toggle_check(form.b_empalillado_automatico) }}
+			{{ render_toggle_check(form.b_empalillado_manual) }}
+			{{ render_toggle_check(form.b_etiquetado_por_producto) }}
+			{{ render_toggle_check(form.b_acopio_por_producto) }}
+		</div>
+	</div>
+
+	<!-- Process C -->
+	<div class="col-12">
+		<label for="productCyclesTable" class="form-label col-12 mb-0">C. Secado</label>
+	</div>
+	<div class="col-12 mt-1 card p-3">
+		<legend class="col-form-label col-12 mt-0 mb-2 p-0">Marque los subprocesos correspondientes</legend>
+		<div class="row row-cols-auto g-3">
+			{{ render_toggle_check(form.c_vapor_externo) }}
+			{{ render_toggle_check(form.c_caldera_bm) }}
+			{{ render_toggle_check(form.c_caldera_gas) }}
+			{{ render_toggle_check(form.c_caldera_fosil) }}
+			{{ render_toggle_check(form.c_caldera_pellet) }}
+			{{ render_toggle_check(form.c_segregacion_carga_l_sl_c) }}
+			{{ render_toggle_check(form.c_segregacion_carga_espesor) }}
+			{{ render_toggle_check(form.c_programa_por_tipo_de_fibra) }}
+			{{ render_toggle_check(form.c_programa_por_espesor) }}
+			{{ render_toggle_check(form.c_utilizacion_de_contrapesos) }}
+			{{ render_toggle_check(form.c_control_de_probetas_de_tensiones) }}
+			{{ render_toggle_check(form.c_control_de_ch) }}
+			<div class="w-100 p-0 m-0"></div>
+			{{ render_camera_toggles(form.c_camara_frontal, form.c_camara_frontal_n, form.c_camara_frontal_vol) }}
+			{{ render_camera_toggles(form.c_camara_tunel, form.c_camara_tunel_n, form.c_camara_tunel_vol) }}
+			{{ render_camera_toggles(form.c_camara_doble_tunel, form.c_camara_doble_tunel_n, form.c_camara_doble_tunel_vol) }}
+		</div>
+		<div class="row mt-4">
+			{{ render_input(form.c_maximo_dias_en_acopio, container="col-auto") }}
+		</div>
+	</div>
+
+	{{ render_buttons('blueprints.section7') }}
+</form>
+{% endblock %}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Resumen</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/lib/bootstrap.min.css') }}">
+	<script src="{{ url_for('static', filename='js/lib/bootstrap.bundle.min.js') }}"></script>
+</head>
+
+<body class="bg-light py-4">
+	<main class="container">
+
+		{% for message in get_flashed_messages() %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		{% endfor %}
+
+		<div class="row g-4">
+			<div class="col">
+				<h1 id="title">Resumen</h1>
+			</div>
+		</div>
+
+		<div class="accordion accordion-flush my-4" id="summary_accordion">
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="headingOne">
+					<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						Información general de la empresa
+					</button>
+				</h2>
+				<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#summary_accordion">
+					<div class="accordion-body">
+						{% if section1 %}
+						<dl class="row">
+							<dt class="col-lg-3">Nombre de la empresa</dt>
+							<dd class="col-lg-9">{{ section1.company_name }}</dd>
+
+							<dt class="col-lg-3">ID de la empresa</dt>
+							<dd class="col-lg-9">{{ section1.company_id }}</dd>
+
+							<dt class="col-lg-3">Sector industrial principal</dt>
+							<dd class="col-lg-9">{{ section1.economic_sector }}</dd>
+
+							<dt class="col-lg-3">País</dt>
+							<dd class="col-lg-9">{{ section1.country }}</dd>
+
+							<dt class="col-lg-3">Región</dt>
+							<dd class="col-lg-9">{{ section1.admin_div_1 }}</dd>
+
+							<dt class="col-lg-3">Comuna</dt>
+							<dd class="col-lg-9">{{ section1.admin_div_2 }}</dd>
+
+							<dt class="col-lg-3">Calle</dt>
+							<dd class="col-lg-9">{{ section1.street }}</dd>
+
+							<dt class="col-lg-3">Número</dt>
+							<dd class="col-lg-9">{{ section1.street_number }}</dd>
+
+							<dt class="col-lg-3">Teléfono</dt>
+							<dd class="col-lg-9">{{ section1.phone }}</dd>
+
+							<dt class="col-lg-3">Nombre de quien responde la encuesta</dt>
+							<dd class="col-lg-9">{{ section1.respondant_name }}</dd>
+
+							<dt class="col-lg-3">Cargo de quien responde la encuesta</dt>
+							<dd class="col-lg-9">{{ section1.respondant_position }}</dd>
+						</dl>
+						{% else %}
+						<p><i>No hay Información en esta sección. <a href="{{ url_for('blueprints.section1') }}">Ir a la sección 1</a></i></p>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="headingTwo">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+						Información sobre la oferta de la empresa
+					</button>
+				</h2>
+				<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#summary_accordion">
+					<div class="accordion-body">
+						{% if not section1 %}
+						<p><i>Primero debe completar la primera sección. <a href="{{ url_for('blueprints.section1') }}">Ir a la sección 1</a></i></p>
+						{% else %}
+						{% if section2 %}
+						<dl class="row">
+							<dt class="col-lg-3">Productos comercializados en el país</dt>
+							<dd class="col-lg-9">
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Descripción</th>
+											<th scope="col">Cantidad</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for i in range(section2.local_products_entries) %}
+										<tr>	
+											<th scope="row">{{ i+1 }}</th>
+											<td>{{ local_products[i].product_description }}</td>
+											<td>{{ local_products[i].product_quantity }} {{ local_products[i].product_unit }}</td>
+										</tr>
+										{% endfor %}
+								</table>
+							</dd>
+
+							<dt class="col-lg-3">Productos comercializados en el extranjero</dt>
+							<dd class="col-lg-9">
+								{% if section2.exterior_products_entries != 0 %}
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col">#</th>
+											<th scope="col">Descripción</th>
+											<th scope="col">Cantidad</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for i in range(section2.exterior_products_entries) %}
+										<tr>	
+											<th scope="row">{{ i+1 }}</th>
+											<td>{{ exterior_products[i].product_description }}</td>
+											<td>{{ exterior_products[i].product_quantity }} {{ exterior_products[i].product_unit }}</td>
+										</tr>
+										{% endfor %}
+								</table>
+								{% else %}
+								Ninguno
+								{% endif %}
+							</dd>
+
+							<dt class="col-lg-3">Principales clientes</dt>
+							<dd class="col-lg-9">
+								<table class="table">
+									<thead>
+										<tr>
+											<th scope="col"></th>
+											<th scope="col">Participación</th>
+											<th scope="col">Canal de venta</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>	
+											<th scope="row">Personas naturales</th>
+											<td>{{ section2.natural_people_participation }}%</td>
+											<td>{{ section2.natural_people_category }}</td>
+										</tr>
+										<tr>	
+											<th scope="row">Microempresas</th>
+											<td>{{ section2.micro_businesses_participation }}%</td>
+											<td>{{ section2.micro_businesses_category }}</td>
+										</tr>
+										<tr>	
+											<th scope="row">Pequeñas empresas</th>
+											<td>{{ section2.small_businesses_participation }}%</td>
+											<td>{{ section2.small_businesses_category }}</td>
+										</tr>
+										<tr>	
+											<th scope="row">Medianas empresas</th>
+											<td>{{ section2.medium_businesses_participation }}%</td>
+											<td>{{ section2.medium_businesses_category }}</td>
+										</tr>
+										<tr>	
+											<th scope="row">Grandes empresas</th>
+											<td>{{ section2.big_businesses_participation }}%</td>
+											<td>{{ section2.big_businesses_category }}</td>
+										</tr>
+										<tr>	
+											<th scope="row">Organismos del Estado</th>
+											<td>{{ section2.state_agencies_participation }}%</td>
+											<td>{{ section2.state_agencies_category }}</td>
+										</tr>
+								</table>
+							</dd>
+
+							<dt class="col-lg-3">Volumen de ventas del último año contable</dt>
+							<dd class="col-lg-9">USD$ {{ section2.sales_volume }}</dd>
+
+							<dt class="col-lg-3">Número de trabajadores</dt>
+							<dd class="col-lg-9">{{ section2.workers_number }}</dd>
+
+							<dt class="col-lg-3">Número de trabajadores mujeres</dt>
+							<dd class="col-lg-9">{{ section2.female_workers }}</dd>
+						</dl>
+						{% else %}
+						<p><i>No hay Información en esta sección. <a href="{{ url_for('blueprints.section2') }}">Ir a la sección 2</a></i></p>
+						{% endif %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="accordion-item">
+				<h2 class="accordion-header" id="headingThree">
+					<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+						Información de la producción de la empresa
+					</button>
+				</h2>
+				<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#summary_accordion">
+					<div class="accordion-body">
+						{% if not section1 %}
+						<p><i>Primero debe completar la primera sección. <a href="{{ url_for('blueprints.section1') }}">Ir a la sección 1</a></i></p>
+						{% else %}
+						{% if section3 %}
+						Cuerpo
+						{% else %}
+						<p><i>No hay Información en esta sección. <a href="{{ url_for('blueprints.section3') }}">Ir a la sección 3</a></i></p>
+						{% endif %}
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</main>
+</body>

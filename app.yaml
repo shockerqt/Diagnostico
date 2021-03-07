@@ -1,0 +1,4 @@
+runtime: python39
+
+env_variables:
+  CLOUD_SQL_CONNECTION_NAME: "formulario-diagnostico:us-central1:formulario-db"

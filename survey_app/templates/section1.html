@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<script src="{{ url_for('static', filename='js/section1.js') }}"></script>
+{% endblock %}
+
+{% block form %}
+<form class="needs-validation row g-4" method=post novalidate>
+	{{ form.csrf_token }}
+
+	<!-- Progress Bar -->
+	<div class="col-12">
+		<div class="progress" style="height: 6px;">
+			<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 10%;" aria-valuenow="1" aria-valuemin="0" aria-valuemax="10"></div>
+		</div>
+	</div>
+
+	<!-- Direction / Place autocomplete -->
+	<div class="col-12" id="locationField">
+		<label for="address" class="form-label">Dirección</label>
+		<input type="text" class="form-control" id="address" placeholder="Ingrese su dirección" onFocus="geolocate()" autocomplete="off">
+	</div>
+	{{ render_input(form.country, container="col-md-6 col-lg-4", readonly=True) }}
+	{{ form.country_code }}
+	{{ render_input(form.admin_div_1, "col-md-6 col-lg-4", readonly=True) }}
+	{{ render_input(form.admin_div_2, "col-md-6 col-lg-4", readonly=True) }}
+	{{ render_input(form.street, "col-md-6  col-lg-8") }}
+	{{ render_input(form.street_number, "col-md-6 col-lg-4", autocomplete="off") }}
+	<!-- Force next columns to break to new line at md breakpoint and up -->
+	<div class="w-100 d-none d-md-block"></div>
+	{{ render_input(form.company_name, "col-md-6") }}
+	{{ render_input(form.company_id, "col-md-6") }}
+	{{ render_select(form.economic_sector, "col-md-6") }}
+	{{ render_input(form.phone, "col-md-6") }}
+	{{ render_input(form.respondant_name, "col-md-6") }}
+	{{ render_select(form.respondant_position, "col-md-6") }}
+	{{ render_input(form.respondant_position_other, "col-md-6", 'id=respondant_position_other_container hidden') }}
+
+	<hr class="my-4">
+
+	<button id="firstSectionNextButton" class="w-100 btn btn-primary btn-lg" type="submit">Siguiente sección</button>
+
+	<!-- Place Autocomplete -->
+	<script src="{{ url_for('static', filename='js/places.js') }}"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYXge9PLU_0ahwByXk0qKpweQ6PfXy7Mc&callback=initAutocomplete&libraries=places&v=weekly" async></script>
+</form>
+{% endblock %}

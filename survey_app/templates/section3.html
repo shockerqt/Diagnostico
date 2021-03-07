@@ -1,0 +1,103 @@
+{% from "_formhelpers.html" import render_table_row, render_input_inline_unit %}
+
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<script src="{{ url_for('static', filename='js/section3.js') }}"></script>
+{% endblock %}
+
+{% block form %}
+<form class="needs-validation row g-4" method=post novalidate>
+	{{ form.csrf_token }}
+
+	<!-- Progress Bar -->
+	<div class="col-12">
+		<div class="progress" style="height: 6px;">
+			<div class="progress-bar progress-bar-striped" role="progressbar" style="width: 30%;" aria-valuenow="3" aria-valuemin="0" aria-valuemax="10"></div>
+		</div>
+	</div>
+
+	{{ render_input_inline_unit(form.production_area, form.production_area_unit, [('m²','metros cuadrados'), ('ft²', 'pies cuadrados'), ('ha', 'hectáreas')], span_id='production_area_span', unit_id='production_area_unit') }}
+	{{ render_input_inline(form.production_turns) }}
+	{{ render_input_inline(form.production_turn_hours) }}
+	{{ render_select_inline(form.production_activity_monitoring) }}
+
+	<!-- Productive cycles -->
+	<div class="col-12">
+		<label for="productCyclesTable" class="form-label mb-0">Si la empresa tiene ciclos productivos, marque la casilla a los meses que correspondan</label>
+	</div>
+	<div class="col-12 overflow-auto mt-0" id="productCyclesTable">
+		<div class="card text-center py-2 my-table" style="min-width: 400px;">
+			<div class="row px-1 py-0 m-0 flex-nowrap">
+				<div class="col-4"></div>
+				<div class="col text-center h6 small">Temporada alta</div>
+				<div class="col text-center h6 small">Temporada baja</div>
+			</div>
+			{{ render_table_row('Enero', form.jan_productive_cycle) }}
+			{{ render_table_row('Febrero', form.feb_productive_cycle) }}
+			{{ render_table_row('Marzo', form.mar_productive_cycle) }}
+			{{ render_table_row('Abril', form.apr_productive_cycle) }}
+			{{ render_table_row('Mayo', form.may_productive_cycle) }}
+			{{ render_table_row('Junio', form.jun_productive_cycle) }}
+			{{ render_table_row('Julio', form.jul_productive_cycle) }}
+			{{ render_table_row('Agosto', form.aug_productive_cycle) }}
+			{{ render_table_row('Septiembre', form.sep_productive_cycle) }}
+			{{ render_table_row('Octubre', form.oct_productive_cycle) }}
+			{{ render_table_row('Noviembre', form.nov_productive_cycle) }}
+			{{ render_table_row('Diciembre', form.dec_productive_cycle) }}
+		</div>
+	</div>
+
+	<!-- Complaints -->
+	<div class="col-12">
+		<label for="productCyclesTable" class="form-label mb-0">¿Cuáles son los tipos de reclamo que recibe y su frecuencia más común?</label>
+	</div>
+	<div class="col-12 overflow-auto mt-0" id="productCyclesTable">
+		<div class="card text-center py-2" style="min-width: 700px;">
+			<div class="row px-1 py-0 m-0 flex-nowrap">
+				<div class="col-3"></div>
+				<div class="col text-center h6 small">Diaria</div>
+				<div class="col text-center h6 small">Semanal</div>
+				<div class="col text-center h6 small">Mensual</div>
+				<div class="col text-center h6 small">Trimestral</div>
+				<div class="col text-center h6 small">Semestral</div>
+				<div class="col text-center h6 small">Anual</div>
+			</div>
+			{{ render_table_row(form.quality_complaints.label.text, form.quality_complaints, 'col-3', odd=True) }}
+			{{ render_table_row(form.performance_complaints.label.text, form.performance_complaints, 'col-3') }}
+			{{ render_table_row(form.dispatch_complaints.label.text, form.dispatch_complaints, 'col-3', odd=True) }}
+			{{ render_table_row(form.wrong_product_complaints.label.text, form.wrong_product_complaints, 'col-3') }}
+		</div>
+	</div>
+
+	<!-- Platforms -->
+	<div class="col-12">
+		<label for="productCyclesTable" class="form-label mb-0">¿En qué emplea las siguientes plataformas?</label>
+	</div>
+	<div class="col-12 overflow-auto mt-0" id="productCyclesTable">
+		<div class="card text-center py-2" style="min-width: 700px;">
+			<div class="row px-1 py-0 m-0 flex-nowrap">
+				<div class="col-3"></div>
+				<div class="col text-center h6 small">No usamos</div>
+				<div class="col text-center h6 small">Información básica (contacto, productos)</div>
+				<div class="col text-center h6 small">Catálogo online</div>
+				<div class="col text-center h6 small">Ventas online</div>
+				<div class="col text-center h6 small">Promoción y Márketing</div>
+			</div>
+			{{ render_table_row(form.web_page_usage.label.text, form.web_page_usage, 'col-3', odd=True) }}
+			{{ render_table_row(form.facebook_usage.label.text, form.facebook_usage, 'col-3') }}
+			{{ render_table_row(form.twitter_usage.label.text, form.twitter_usage, 'col-3', odd=True) }}
+			{{ render_table_row(form.linkedin_usage.label.text, form.linkedin_usage, 'col-3') }}
+			{{ render_table_row(form.instagram_usage.label.text, form.instagram_usage, 'col-3', odd=True) }}
+			{{ render_table_row(form.whatsapp_usage.label.text, form.whatsapp_usage, 'col-3') }}
+		</div>
+	</div>
+
+	{{ render_radio(form.recent_investments) }}
+	{{ form.recent_investments_amount_currency }}
+	{{ render_input_inline_money(form.recent_investments_amount, cont_class="col-12 mt-0", currencies=currencies,
+		cont_attr="id=recent_investments_amount_cont", span_id="recent_investments_amount_span", currency_id="recent_investments_amount_currency") }}
+	
+	{{ render_buttons('blueprints.section2') }}
+</form>
+{% endblock %}
