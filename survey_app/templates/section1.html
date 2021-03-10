@@ -16,18 +16,19 @@
 	</div>
 
 	<!-- Direction / Place autocomplete -->
-	<div class="col-12" id="locationField">
-		<label for="address" class="form-label">Dirección</label>
-		<input type="text" class="form-control" id="address" placeholder="Ingrese su dirección" onFocus="geolocate()" autocomplete="off">
+	<div class="col-12">
+		<label for="autocomplete" class="form-label">Dirección</label>
+		<input type="text" class="form-control" id="autocomplete" placeholder="Ingrese su dirección" aria-describedby="autocomplete_help">
+		<div id="autocomplete_help" class="form-text">Utilice este campo para autocompletar los siguientes campos de dirección.</div>
 	</div>
-	{{ render_input(form.country, container="col-md-6 col-lg-4", readonly=True) }}
+	{{ render_input(form.country, container="col-md-6 col-lg-4") }}
 	{{ form.country_code }}
-	{{ render_input(form.admin_div_1, "col-md-6 col-lg-4", readonly=True) }}
-	{{ render_input(form.admin_div_2, "col-md-6 col-lg-4", readonly=True) }}
+	{{ render_input(form.admin_div_1, "col-md-6 col-lg-4") }}
+	{{ render_input(form.admin_div_2, "col-md-6 col-lg-4") }}
 	{{ render_input(form.street, "col-md-6  col-lg-8") }}
-	{{ render_input(form.street_number, "col-md-6 col-lg-4", autocomplete="off") }}
+	{{ render_input(form.street_number, "col-md-6 col-lg-4") }}
 	<!-- Force next columns to break to new line at md breakpoint and up -->
-	<div class="w-100 d-none d-md-block"></div>
+	<div class="w-100 d-none d-md-block m-0"></div>
 	{{ render_input(form.company_name, "col-md-6") }}
 	{{ render_input(form.company_id, "col-md-6") }}
 	{{ render_select(form.economic_sector, "col-md-6") }}
